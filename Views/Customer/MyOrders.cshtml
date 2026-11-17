@@ -1,0 +1,251 @@
+﻿@{
+    ViewBag.Title = "Đơn hàng của tôi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string currentStatus = ViewBag.SelectedStatus as string;
+    if (string.IsNullOrEmpty(currentStatus)) { currentStatus = "tat-ca"; }
+
+    string searchKeyword = ViewBag.SearchKeyword as string;
+    if (searchKeyword == null) { searchKeyword = ""; }
+    searchKeyword = searchKeyword.Trim().ToLower();
+
+    // Hàm kiểm tra từ khóa khớp với đơn hàng
+    bool match1001 = string.IsNullOrEmpty(searchKeyword) || "#dh1001".Contains(searchKeyword) || "làm giàu".Contains(searchKeyword) || "plm trading".Contains(searchKeyword);
+    bool match1002 = string.IsNullOrEmpty(searchKeyword) || "#dh1002".Contains(searchKeyword) || "hãy chăm sóc mẹ".Contains(searchKeyword) || "tiki trading".Contains(searchKeyword);
+    bool match1003 = string.IsNullOrEmpty(searchKeyword) || "#dh1003".Contains(searchKeyword) || "cây cam ngọt".Contains(searchKeyword) || "fahasa".Contains(searchKeyword);
+    bool match1004 = string.IsNullOrEmpty(searchKeyword) || "#dh1004".Contains(searchKeyword) || "làm giàu".Contains(searchKeyword) || "plm trading".Contains(searchKeyword) || "hãy chăm sóc mẹ".Contains(searchKeyword);
+    bool match1005 = string.IsNullOrEmpty(searchKeyword) || "#dh1005".Contains(searchKeyword) || "cây cam ngọt".Contains(searchKeyword) || "fahasa".Contains(searchKeyword);
+}
+
+<div style="max-width: 1000px; margin: 20px auto; font-family: Arial, sans-serif;">
+    <h2 style="margin-bottom: 20px; color: #333;">Đơn hàng của tôi</h2>
+
+    <ul style="list-style: none; padding: 0; margin: 0 0 20px 0; display: flex; border-bottom: 2px solid #ddd; overflow-x: auto;">
+        <li style="margin-right: 5px;">
+            <a href="/Customer/MyOrders?status=tat-ca" style="padding: 10px 15px; display: block; background: @(currentStatus == "tat-ca" ? "#007bff" : "#f8f9fa"); color: @(currentStatus == "tat-ca" ? "white" : "#555"); text-decoration: none; border-radius: 4px 4px 0 0; font-weight: bold; white-space: nowrap;">Tất cả đơn</a>
+        </li>
+        <li style="margin-right: 5px;">
+            <a href="/Customer/MyOrders?status=cho-thanh-toan" style="padding: 10px 15px; display: block; background: @(currentStatus == "cho-thanh-toan" ? "#007bff" : "#f8f9fa"); color: @(currentStatus == "cho-thanh-toan" ? "white" : "#555"); text-decoration: none; border-radius: 4px 4px 0 0; font-weight: bold; white-space: nowrap;">Chờ thanh toán</a>
+        </li>
+        <li style="margin-right: 5px;">
+            <a href="/Customer/MyOrders?status=dang-xu-ly" style="padding: 10px 15px; display: block; background: @(currentStatus == "dang-xu-ly" ? "#007bff" : "#f8f9fa"); color: @(currentStatus == "dang-xu-ly" ? "white" : "#555"); text-decoration: none; border-radius: 4px 4px 0 0; font-weight: bold; white-space: nowrap;">Đang xử lý</a>
+        </li>
+        <li style="margin-right: 5px;">
+            <a href="/Customer/MyOrders?status=dang-van-chuyen" style="padding: 10px 15px; display: block; background: @(currentStatus == "dang-van-chuyen" ? "#007bff" : "#f8f9fa"); color: @(currentStatus == "dang-van-chuyen" ? "white" : "#555"); text-decoration: none; border-radius: 4px 4px 0 0; font-weight: bold; white-space: nowrap;">Đang vận chuyển</a>
+        </li>
+        <li style="margin-right: 5px;">
+            <a href="/Customer/MyOrders?status=da-giao" style="padding: 10px 15px; display: block; background: @(currentStatus == "da-giao" ? "#007bff" : "#f8f9fa"); color: @(currentStatus == "da-giao" ? "white" : "#555"); text-decoration: none; border-radius: 4px 4px 0 0; font-weight: bold; white-space: nowrap;">Đã giao</a>
+        </li>
+        <li>
+            <a href="/Customer/MyOrders?status=da-huy" style="padding: 10px 15px; display: block; background: @(currentStatus == "da-huy" ? "#007bff" : "#f8f9fa"); color: @(currentStatus == "da-huy" ? "white" : "#555"); text-decoration: none; border-radius: 4px 4px 0 0; font-weight: bold; white-space: nowrap;">Đã hủy</a>
+        </li>
+    </ul>
+
+    <form action="/Customer/MyOrders" method="get" style="margin-bottom: 25px;">
+        <input type="hidden" name="status" value="@currentStatus" />
+        <div style="display: flex;">
+            <input type="text" name="search" value="@ViewBag.SearchKeyword" placeholder="Tìm đơn hàng theo Mã đơn hàng, Nhà bán hoặc Tên sản phẩm" style="flex: 1; padding: 10px 15px; border: 1px solid #ccc; border-radius: 4px 0 0 4px; outline: none; font-size: 14px;" />
+            <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: 1px solid #007bff; border-radius: 0 4px 4px 0; cursor: pointer; font-weight: bold;">Tìm đơn hàng</button>
+        </div>
+    </form>
+
+    @{
+        bool hasResult = false;
+
+        if (currentStatus == "cho-thanh-toan" && match1001)
+        {
+            hasResult = true;
+            <div style="border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div style="border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #f0ad4e; font-weight: bold; font-size: 15px;">⏳ Chờ thanh toán</span>
+                    <span style="color: #555; font-size: 14px; font-weight: bold;">Mã đơn: #DH1001</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 15px; position: relative;">
+                    <div style="position: relative; margin-right: 15px;">
+                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&h=260&fit=crop" alt="Sách" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                        <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                    </div>
+                    <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">Làm Giàu Từ Siêu Cổ Phiếu – Câu Chuyện Của Gã Du Mục Phố Wall – JESSE C. STINE</h4><div style="color: #666; font-size: 13px;">PLM Trading</div></div>
+                    <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">399.000 đ</span></div>
+                </div>
+                <div style="border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; align-items: center;">
+                    <div style="margin-right: 20px;">Tổng tiền: <strong style="color: #d9534f; font-size: 18px;">399.000 đ</strong></div>
+                    <a href="#" onclick="alert('Đang chuyển đến cổng thanh toán...'); return false;" style="padding: 7px 15px; background: #f0ad4e; color: white; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">Thanh toán ngay</a>
+                </div>
+            </div>
+        }
+
+        if (currentStatus == "dang-xu-ly" && match1002)
+        {
+            hasResult = true;
+            <div style="border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div style="border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #0275d8; font-weight: bold; font-size: 15px;">🔄 Đang xử lý</span>
+                    <span style="color: #555; font-size: 14px; font-weight: bold;">Mã đơn: #DH1002</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 15px; position: relative;">
+                    <div style="position: relative; margin-right: 15px;">
+                        <img src="https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=200&h=260&fit=crop" alt="Sách" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                        <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                    </div>
+                    <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">Hãy Chăm Sóc Mẹ (Tái Bản 2018)</h4><div style="color: #666; font-size: 13px;">Tiki Trading</div></div>
+                    <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">67.000 đ</span></div>
+                </div>
+                <div style="border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; align-items: center;">
+                    <div style="margin-right: 20px;">Tổng tiền: <strong style="color: #d9534f; font-size: 18px;">67.000 đ</strong></div>
+                    <a href="#" onclick="alert('Đã gửi yêu cầu hủy đơn hàng!'); return false;" style="padding: 7px 15px; background: #d9534f; color: white; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">Hủy đơn hàng</a>
+                </div>
+            </div>
+        }
+
+        if (currentStatus == "dang-van-chuyen" && match1003)
+        {
+            hasResult = true;
+            <div style="border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div style="border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #5bc0de; font-weight: bold; font-size: 15px;">🚚 Đang vận chuyển</span>
+                    <span style="color: #555; font-size: 14px; font-weight: bold;">Mã đơn: #DH1003</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 15px; position: relative;">
+                    <div style="position: relative; margin-right: 15px;">
+                        <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=200&h=260&fit=crop" alt="Sách" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                        <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                    </div>
+                    <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">Cây Cam Ngọt Của Tôi</h4><div style="color: #666; font-size: 13px;">Nhà sách Fahasa</div></div>
+                    <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">73.800 đ</span></div>
+                </div>
+                <div style="border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; align-items: center;">
+                    <div style="margin-right: 20px;">Tổng tiền: <strong style="color: #d9534f; font-size: 18px;">73.800 đ</strong></div>
+                    <a href="#" onclick="alert('Xem chi tiết vận chuyển...'); return false;" style="padding: 7px 15px; background: #0275d8; color: white; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">Xem chi tiết</a>
+                </div>
+            </div>
+        }
+
+        if (currentStatus == "da-giao" && match1004)
+        {
+            hasResult = true;
+            <div style="border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div style="border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #333; font-weight: bold; font-size: 15px;">Giao hàng thành công</span>
+                    <span style="color: #555; font-size: 14px; font-weight: bold;">Mã đơn: #DH1004</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 15px; position: relative;">
+                    <div style="position: relative; margin-right: 15px;">
+                        <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&h=260&fit=crop" alt="Sách 1" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                        <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                    </div>
+                    <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">LÀM GIÀU TỪ SIÊU CỔ PHIẾU – Câu Chuyện Của Gã Du Mục Phố Wall – JESSE C. STINE</h4><div style="color: #666; font-size: 13px;">PLM Trading</div></div>
+                    <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">399.000 đ</span></div>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 15px; border-top: 1px solid #f5f5f5; padding-top: 15px; position: relative;">
+                    <div style="position: relative; margin-right: 15px;">
+                        <img src="https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=200&h=260&fit=crop" alt="Sách 2" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                        <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                    </div>
+                    <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">Hãy Chăm Sóc Mẹ (Tái Bản 2018)</h4><div style="color: #666; font-size: 13px;">Tiki Trading</div></div>
+                    <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">67.000 đ</span></div>
+                </div>
+                <div style="border-top: 1px solid #eee; padding-top: 12px; margin-bottom: 15px;">
+                    <a href="#" onclick="alert('Đang hiển thị thêm 3 sản phẩm...'); return false;" style="display: inline-block; padding: 5px 12px; border: 1px solid #ccc; border-radius: 4px; color: #333; text-decoration: none; font-size: 13px; background: #fafafa;">Xem thêm 3 sản phẩm</a>
+                </div>
+                <div style="border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; align-items: center;">
+                    <div style="margin-right: 20px;">Tổng tiền: <strong style="color: #d9534f; font-size: 18px;">734.645 đ</strong></div>
+                    <a href="#" onclick="alert('Đã thêm sản phẩm vào giỏ hàng để mua lại!'); return false;" style="padding: 7px 15px; background: #fff; border: 1px solid #007bff; color: #007bff; border-radius: 4px; font-weight: bold; text-decoration: none; margin-right: 5px; display: inline-block;">Mua lại</a>
+                    <a href="#" onclick="alert('Xem chi tiết đơn hàng...'); return false;" style="padding: 7px 15px; background: #007bff; color: white; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">Xem chi tiết</a>
+                </div>
+            </div>
+        }
+
+        if (currentStatus == "da-huy" && match1005)
+        {
+            hasResult = true;
+            <div style="border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <div style="border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #dc3545; font-weight: bold; font-size: 15px;">Đã hủy</span>
+                    <span style="color: #555; font-size: 14px; font-weight: bold;">Mã đơn: #DH1005</span>
+                </div>
+                <div style="display: flex; align-items: center; margin-bottom: 15px; position: relative;">
+                    <div style="position: relative; margin-right: 15px;">
+                        <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=200&h=260&fit=crop" alt="Sách" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                        <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                    </div>
+                    <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">Cây Cam Ngọt Của Tôi</h4><div style="color: #666; font-size: 13px;">Nhà sách Fahasa</div></div>
+                    <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">73.800 đ</span></div>
+                </div>
+                <div style="border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; align-items: center;">
+                    <div style="margin-right: 20px;">Tổng tiền: <strong style="color: #d9534f; font-size: 18px;">80.300 đ</strong></div>
+                    <a href="#" onclick="alert('Đã thêm sản phẩm vào giỏ hàng để mua lại!'); return false;" style="padding: 7px 15px; background: #fff; border: 1px solid #007bff; color: #007bff; border-radius: 4px; font-weight: bold; text-decoration: none; margin-right: 5px; display: inline-block;">Mua lại</a>
+                    <a href="#" onclick="alert('Xem chi tiết đơn hàng...'); return false;" style="padding: 7px 15px; background: #007bff; color: white; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">Xem chi tiết</a>
+                </div>
+            </div>
+        }
+
+        if (currentStatus == "tat-ca")
+        {
+            if (match1004)
+            {
+                hasResult = true;
+                <div style="border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div style="border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #333; font-weight: bold; font-size: 15px;">Giao hàng thành công</span>
+                        <span style="color: #555; font-size: 14px; font-weight: bold;">Mã đơn: #DH1004</span>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px; position: relative;">
+                        <div style="position: relative; margin-right: 15px;">
+                            <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=200&h=260&fit=crop" alt="Sách 1" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                            <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                        </div>
+                        <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">LÀM GIÀU TỪ SIÊU CỔ PHIẾU – Câu Chuyện Của Gã Du Mục Phố Wall – JESSE C. STINE</h4><div style="color: #666; font-size: 13px;">PLM Trading</div></div>
+                        <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">399.000 đ</span></div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px; border-top: 1px solid #f5f5f5; padding-top: 15px; position: relative;">
+                        <div style="position: relative; margin-right: 15px;">
+                            <img src="https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=200&h=260&fit=crop" alt="Sách 2" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                            <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                        </div>
+                        <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">Hãy Chăm Sóc Mẹ (Tái Bản 2018)</h4><div style="color: #666; font-size: 13px;">Tiki Trading</div></div>
+                        <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">67.000 đ</span></div>
+                    </div>
+                    <div style="border-top: 1px solid #eee; padding-top: 12px; margin-bottom: 15px;">
+                        <a href="#" onclick="alert('Đang hiển thị thêm 3 sản phẩm...'); return false;" style="display: inline-block; padding: 5px 12px; border: 1px solid #ccc; border-radius: 4px; color: #333; text-decoration: none; font-size: 13px; background: #fafafa;">Xem thêm 3 sản phẩm</a>
+                    </div>
+                    <div style="border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; align-items: center;">
+                        <div style="margin-right: 20px;">Tổng tiền: <strong style="color: #d9534f; font-size: 18px;">734.645 đ</strong></div>
+                        <a href="#" onclick="alert('Đã thêm sản phẩm vào giỏ hàng để mua lại!'); return false;" style="padding: 7px 15px; background: #fff; border: 1px solid #007bff; color: #007bff; border-radius: 4px; font-weight: bold; text-decoration: none; margin-right: 5px; display: inline-block;">Mua lại</a>
+                        <a href="#" onclick="alert('Xem chi tiết đơn hàng...'); return false;" style="padding: 7px 15px; background: #007bff; color: white; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">Xem chi tiết</a>
+                    </div>
+                </div>
+            }
+
+            if (match1005)
+            {
+                hasResult = true;
+                <div style="border: 1px solid #e0e0e0; border-radius: 8px; background: #fff; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <div style="border-bottom: 1px solid #eee; padding-bottom: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: #333; font-weight: bold; font-size: 15px;">Đã hủy</span>
+                        <span style="color: #555; font-size: 14px; font-weight: bold;">Mã đơn: #DH1005</span>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 15px; position: relative;">
+                        <div style="position: relative; margin-right: 15px;">
+                            <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?w=200&h=260&fit=crop" alt="Sách" style="width: 70px; height: 90px; object-fit: cover; border: 1px solid #ddd; border-radius: 4px;" />
+                            <span style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 5px; border-radius: 2px;">x1</span>
+                        </div>
+                        <div style="flex: 1;"><h4 style="margin: 0 0 5px 0; font-size: 15px; color: #333;">Cây Cam Ngọt Của Tôi</h4><div style="color: #666; font-size: 13px;">Nhà sách Fahasa</div></div>
+                        <div style="text-align: right;"><span style="font-weight: bold; color: #333; font-size: 15px;">73.800 đ</span></div>
+                    </div>
+                    <div style="border-top: 1px solid #eee; padding-top: 15px; display: flex; justify-content: flex-end; align-items: center;">
+                        <div style="margin-right: 20px;">Tổng tiền: <strong style="color: #d9534f; font-size: 18px;">80.300 đ</strong></div>
+                        <a href="#" onclick="alert('Đã thêm sản phẩm vào giỏ hàng để mua lại!'); return false;" style="padding: 7px 15px; background: #fff; border: 1px solid #007bff; color: #007bff; border-radius: 4px; font-weight: bold; text-decoration: none; margin-right: 5px; display: inline-block;">Mua lại</a>
+                        <a href="#" onclick="alert('Xem chi tiết đơn hàng...'); return false;" style="padding: 7px 15px; background: #007bff; color: white; border-radius: 4px; font-weight: bold; text-decoration: none; display: inline-block;">Xem chi tiết</a>
+                    </div>
+                </div>
+            }
+        }
+
+        if (!hasResult)
+        {
+            <div style="text-align: center; padding: 40px; color: #777; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;">
+                Không tìm thấy đơn hàng nào phù hợp với từ khóa "@ViewBag.SearchKeyword".
+            </div>
+        }
+    }
+</div>
